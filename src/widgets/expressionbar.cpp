@@ -6,6 +6,7 @@
 #include "expressionbar.h"
 
 #include "../utils.h"
+#include "../globaldefine.h"
 #include "../../3rdparty/core/settings.h"
 
 #include <QApplication>
@@ -586,7 +587,9 @@ void ExpressionBar::enterPercentEvent()
     QString sRegNum = "[＋－×÷/(^!%E]";
     QRegularExpression rx;
     rx.setPattern(sRegNum);
-    QRegularExpressionMatch match = rx.match(exp.at(curpos - 1));
+    QRegularExpressionMatch match;
+    if (curpos > 0)
+        match = rx.match(exp.at(curpos - 1));
     if (curpos == 0 || match.hasMatch()) {
         m_inputEdit->insert("");
         diff = -1;
@@ -1339,17 +1342,17 @@ QString ExpressionBar::pointFaultTolerance(const QString &text)
     }
 
     for (int i = 0; i < reformatStr.size(); ++i) {
-        if (reformatStr.at(i) == QChar('＋') || reformatStr.at(i) == QChar('－') || reformatStr.at(i) == QChar('×') || reformatStr.at(i) == QChar('÷')) {
+        if (reformatStr.at(i) == CN_ADD.at(0) || reformatStr.at(i) == CN_MIN.at(0) || reformatStr.at(i) == CN_MUL.at(0) || reformatStr.at(i) == CN_DIV.at(0)) {
             if (i == 0)
                 continue;
             QString leftitem = reformatStr.left(i);
-            QString rightitem = reformatStr.mid(i);
+            QString rightitem = reformatStr.mid(i + 1);
             QString faulttolerance = m_inputEdit->symbolFaultTolerance(leftitem);
             if (faulttolerance != leftitem)
                 reformatStr.replace(0, i, faulttolerance);
             faulttolerance = m_inputEdit->symbolFaultTolerance(rightitem);
             if (faulttolerance != rightitem)
-                reformatStr.replace(i, reformatStr.length() - i, faulttolerance);
+                reformatStr.replace(i + 1, reformatStr.length() - i - 1, faulttolerance);
         }
     }
     QString result = reformatStr;
@@ -1593,8 +1596,10 @@ bool ExpressionBar::cancelLink(int index)
         if (m_hisLink[i].linkedItem == m_hisRevision) {
             QString exp = m_inputEdit->text();
             exp = exp.replace(",", "");
+            if (exp.isEmpty())
+                continue;
             QStringList list = exp.split(QRegularExpression("[＋－×÷()]"));
-            if (exp[0] == QChar(QStringLiteral("－").at(0)))
+            if (exp[0] == QChar(QStringLiteral("－").at(0)) && list.size() > 1)
                 list[0] = "－" + list[1];
             QString linkvalue = m_hisLink[i].linkageValue;
             linkvalue = linkvalue.replace(",", "");
