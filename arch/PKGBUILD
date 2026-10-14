@@ -20,9 +20,18 @@ _srcroot() {
   git -C "$startdir" rev-parse --show-toplevel
 }
 
+prepare() {
+  # qt_create_translation 会用 lupdate 改写已跟踪的 .ts 文件，因此在 $srcdir 中的副本里构建，不改动仓库
+  # qt_create_translation rewrites the tracked .ts files with lupdate, so build
+  # from a copy in $srcdir and leave the checkout untouched.
+  rm -rf "$srcdir/$pkgname"
+  mkdir "$srcdir/$pkgname"
+  tar -C "$(_srcroot)" --exclude=./.git -cf - . | tar -C "$srcdir/$pkgname" -xf -
+}
+
 build() {
   # 与 debian/rules 相同 ・ Same as debian/rules.
-  cmake -B build -S "$(_srcroot)" -GNinja \
+  cmake -B build -S "$srcdir/$pkgname" -GNinja \
     -DCMAKE_BUILD_TYPE=None \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DBUILD_TESTING=OFF \
