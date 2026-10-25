@@ -80,6 +80,7 @@ DGuiApplicationHelper::ColorType getThemeTypeSetting()
 
 int main(int argc, char *argv[])
 {
+    qputenv("D_DTK_SIZEMODE", "1");
     qInfo() << "Starting deepin-calculator application";
     if (!QString(qgetenv("XDG_CURRENT_DESKTOP")).toLower().startsWith("deepin")) {
         qDebug() << "Setting XDG_CURRENT_DESKTOP to Deepin";
