@@ -1,7 +1,7 @@
 # Maintainer: CharOfString <root@charofstring.cc>
 pkgname=deepin-calculator-git
 pkgver=6.5.37
-pkgrel=1
+pkgrel=2
 pkgdesc='Easy to use calculator for GXDE'
 arch=('x86_64' 'aarch64')
 url="https://github.com/GXDE-OS/deepin-calculator"

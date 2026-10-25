@@ -1,4 +1,4 @@
-deepin-calculator (6.5.37) unstable; urgency=medium
+deepin-calculator (6.5.37-2) unstable; urgency=medium
 
   * chore: Update version to 6.5.37
   * fix: keep operators during point tolerance cleanup
