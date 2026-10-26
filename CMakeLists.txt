@@ -178,8 +178,8 @@ install(FILES ${CMAKE_CURRENT_LIST_DIR}/com.deepin.Calculator.service
         DESTINATION ${CMAKE_INSTALL_DATADIR}/dbus-1/services/)
 install(FILES ${CMAKE_CURRENT_LIST_DIR}/src/assets/images/deepin-calculator.svg
             DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps/)
-install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/src/assets/deepin-calculator
-                DESTINATION ${CMAKE_INSTALL_DATADIR}/deepin-manual/manual-assets/application/)
+#install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/src/assets/deepin-calculator
+#                DESTINATION ${CMAKE_INSTALL_DATADIR}/deepin-manual/manual-assets/application/)
 
 # 启用单元测试 (Debug 模式下)
 if (NOT ${CMAKE_SYSTEM_PROCESSOR} MATCHES "loongarch64")
