@@ -1,9 +1,10 @@
-// Copyright (C) 2017 ~ 2018 Deepin Technology Co., Ltd.
+// Copyright (C) 2017 - 2026 Deepin Technology Co., Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "mainwindow.h"
+#include "ddlog.h"
 #include "calculatorInterface.h"
 
 #include "dtitlebar.h"
@@ -33,10 +34,12 @@ const QSize PROGRAMM_SIZE = QSize(451, 574); //程序员模式固定大小
 MainWindow::MainWindow(QWidget *parent)
     : DMainWindow(parent)
 {
-    qDebug() << "Initializing MainWindow";
+    qCDebug(appLog) << "Initializing MainWindow";
     m_settings = DSettingsAlt::instance();
     m_mainLayout = new QStackedLayout();
     m_tbMenu = new DMenu(this);
+    m_tbMenu->setObjectName("MainWindowTbMenu");
+    m_tbMenu->setAccessibleName("MainWindowTbMenu");
     QIcon t_icon = QIcon::fromTheme("deepin-calculator");
     titlebar()->setIcon(t_icon);
     titlebar()->setMenu(m_tbMenu);
@@ -45,8 +48,12 @@ MainWindow::MainWindow(QWidget *parent)
     m_simpleAction = new QAction(tr("Standard"), this);
     m_scAction = new QAction(tr("Scientific"), this);
     m_programmerAction = new QAction(tr("Programmer"), this);
+    m_simpleAction->setObjectName("MainWindowSimpleAction");
+    m_scAction->setObjectName("MainWindowScAction");
+    m_programmerAction->setObjectName("MainWindowProgrammerAction");
 
     m_pActionGroup = new QActionGroup(this); //实现互斥checked
+    m_pActionGroup->setObjectName("MainWindowPActionGroup");
     m_pActionGroup->addAction(m_simpleAction);
     m_pActionGroup->addAction(m_scAction);
     m_pActionGroup->addAction(m_programmerAction);
@@ -56,6 +63,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 #ifdef ENABLE_SCIENTIFIC
     m_modeshowmenu = new DMenu(tr("Mode"), this);
+    m_modeshowmenu->setObjectName("MainWindowModeshowmenu");
+    m_modeshowmenu->setAccessibleName("MainWindowModeshowmenu");
     m_tbMenu->addSeparator(); //添加分隔符
     m_modeshowmenu->addAction(m_simpleAction);
     m_modeshowmenu->addAction(m_scAction);
@@ -67,7 +76,7 @@ MainWindow::MainWindow(QWidget *parent)
     initTheme();
 
     setWindowTitle(tr("Calculator"));
-    qInfo() << "MainWindow initialized successfully";
+    qCInfo(appLog) << "MainWindow initialized successfully";
 
     connect(DGuiApplicationHelper::instance(), &DGuiApplicationHelper::themeTypeChanged, this, &MainWindow::initTheme);
     connect(m_simpleAction, &QAction::triggered, this, &MainWindow::switchToSimpleMode);
@@ -80,14 +89,14 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    qDebug() << "Destroying MainWindow";
+    qCDebug(appLog) << "Destroying MainWindow";
 }
 
 void MainWindow::switchModeBack()
 {
-    qDebug() << "Switching mode back";
+    qCDebug(appLog) << "Switching mode back";
     int mode = m_settings->getOption("mode").toInt();
-    qInfo() << "Current mode:" << mode;
+    qCInfo(appLog) << "Current mode:" << mode;
     switch(mode){
     case 0:
         switchToScientificMode();
@@ -108,9 +117,9 @@ void MainWindow::switchModeBack()
 }
 void MainWindow::initTheme()
 {
-    qDebug() << "Initializing theme";
+    qCDebug(appLog) << "Initializing theme";
     int type = DGuiApplicationHelper::instance()->themeType();
-    qInfo() << "Theme type:" << type;
+    qCInfo(appLog) << "Theme type:" << type;
     if (type == 1) {
         DPalette titlePa = titlebar()->palette();
         titlePa.setColor(DPalette::Light, QColor(240, 240, 240));
@@ -133,9 +142,9 @@ void MainWindow::initTheme()
 
 void MainWindow::initModule()
 {
-    qDebug() << "Initializing module";
+    qCDebug(appLog) << "Initializing module";
     int mode = m_settings->getOption("mode").toInt();
-    qInfo() << "Initial mode:" << mode;
+    qCInfo(appLog) << "Initial mode:" << mode;
     QWidget *centralWidget = new QWidget(this);
 
     centralWidget->setLayout(m_mainLayout);
@@ -179,10 +188,10 @@ void MainWindow::initModule()
 
 void MainWindow::switchToSimpleMode()
 {
-    qDebug() << "Switching to Simple mode";
+    qCDebug(appLog) << "Switching to Simple mode";
     if (Settings::instance()->programmerBase != 0) {
         programmerOldBase = Settings::instance()->programmerBase;
-        qDebug() << "Saved programmer base:" << programmerOldBase;
+        qCDebug(appLog) << "Saved programmer base:" << programmerOldBase;
     }
     Settings::instance()->programmerBase = 0;
     if (!m_basicModule) {
@@ -199,10 +208,10 @@ void MainWindow::switchToSimpleMode()
 
 void MainWindow::switchToScientificMode()
 {
-    qDebug() << "Switching to Scientific mode";
+    qCDebug(appLog) << "Switching to Scientific mode";
     if (Settings::instance()->programmerBase != 0) {
         programmerOldBase = Settings::instance()->programmerBase;
-        qDebug() << "Saved programmer base:" << programmerOldBase;
+        qCDebug(appLog) << "Saved programmer base:" << programmerOldBase;
     }
     Settings::instance()->programmerBase = 0;
     if (!m_scientificModule) {
@@ -220,9 +229,9 @@ void MainWindow::switchToScientificMode()
 
 void MainWindow::switchToProgrammerMode()
 {
-    qDebug() << "Switching to Programmer mode";
+    qCDebug(appLog) << "Switching to Programmer mode";
     Settings::instance()->programmerBase = programmerOldBase;
-    qInfo() << "Restored programmer base:" << programmerOldBase;
+    qCInfo(appLog) << "Restored programmer base:" << programmerOldBase;
     if (!m_programmerModule) {
         m_programmerModule = new ProgramModule(this);
         m_mainLayout->addWidget(m_programmerModule);
@@ -243,7 +252,7 @@ void MainWindow::switchToProgrammerMode()
  */
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    qDebug() << "Key pressed:" << event->text();
+    qCDebug(appLog) << "Key pressed:" << event->text();
     if (m_mainLayout->currentWidget() == m_basicModule)
         m_basicModule->setKeyPress(event);
     else if (m_mainLayout->currentWidget() == m_scientificModule)
@@ -256,14 +265,14 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::moveEvent(QMoveEvent *event)
 {
-    qDebug() << "Window moved to:" << event->pos();
+    qCDebug(appLog) << "Window moved to:" << event->pos();
     m_settings->setOption("windowX", event->pos().x());
     m_settings->setOption("windowY", event->pos().y());
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
-    qDebug() << "Window resized to:" << event->size();
+    qCDebug(appLog) << "Window resized to:" << event->size();
     m_settings->setOption("windowWidth", event->size().width());
     m_settings->setOption("windowHeight", event->size().height());
     DMainWindow::resizeEvent(event);

@@ -1,4 +1,48 @@
-deepin-calculator (6.5.37-2) unstable; urgency=medium
+deepin-calculator (6.5.41) unstable; urgency=medium
+
+  * docs(calculator): add Portuguese help manual
+  * build: migrate linglong.yaml to declarative buildext.apt dependencies
+  * feat: add logging infrastructure with DConfig dynamic rules
+  * feat: convert core modules and control widgets to categorized logging
+  * feat: convert control keypads and memory views to categorized logging
+  * feat: convert view delegates and list widgets to categorized logging
+  * feat: convert module widgets and 3rdparty logs to categorized logging
+  * fix: restore pi symbol input in calculator
+  * test: update SPDX copyright year range to 2022-2026
+  * test: 修复 33 处失败用例并记录 4 项源码缺陷，391 用例全绿
+  * Feat: Update Help Manual -- Update Help Manual Documentation
+  * test: generate ut-summary.json via standalone gen-ut-summary.py
+  * fix: add AT-SPI accessible names for interactive widgets
+
+ -- re2zero <yangwu@uniontech.com>  Fri, 30 Oct 2026 15:33:03 +0800
+
+deepin-calculator (6.5.40) unstable; urgency=medium
+
+  * fix: guard null pointer in HNumber string parsing
+  * fix: support both Qt5 and Qt6 build environments
+  * chore: Sync by
+    https://github.com/linuxdeepin/.github/commit/a300f8523d4876677112ed
+    ab6a0772f7ad112976
+
+ -- liuzheng <liuzheng@uniontech.com>  Wed, 26 Aug 2026 20:14:04 +0800
+
+deepin-calculator (6.5.39) unstable; urgency=medium
+
+  * Update version to 6.5.39. 
+
+ -- Tian ShiLin <tianshilin@uniontech.com>  Thu, 13 Aug 2026 20:43:41 +0800
+
+deepin-calculator (6.5.38) unstable; urgency=medium
+
+  * chore: Update version to 6.5.38
+  * fix: normalize decimal point input
+  * fix: allow cppcheck checkout fork PR
+  * fix: remove deepin prefix from Chinese translations in desktop file
+  * [skip CI] Translate deepin-calculator.ts in it
+
+ -- zhanghongyuan <zhanghongyuan@uniontech.com>  Thu, 30 Jul 2026 15:06:28 +0800
+
+deepin-calculator (6.5.37) unstable; urgency=medium
 
   * chore: Update version to 6.5.37
   * fix: keep operators during point tolerance cleanup

@@ -1,9 +1,10 @@
-// Copyright (C) 2020 ~ 2021 Uniontech Software Technology Co.,Ltd.
+// Copyright (C) 2020 - 2026 Uniontech Software Technology Co.,Ltd.
 // SPDX-FileCopyrightText: 2022 UnionTech Software Technology Co., Ltd.
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "programmodule.h"
+#include "../ddlog.h"
 
 #include "probitwidget.h"
 #include "../../3rdparty/core/settings.h"
@@ -31,7 +32,13 @@ ProgramModule::ProgramModule(QWidget *parent)
     , m_shiftArrowListWidget(new MemoryListWidget(this, true))
     , m_shiftProgrammerArrowDelegate(new ProgrammerArrowDelegate(this))
 {
-    qDebug() << "ProgramModule constructor called";
+    m_proListView->setObjectName("ProgramModuleProListView");
+    m_proListView->setAccessibleName("ProgramModuleProListView");
+    m_byteArrowListWidget->setObjectName("ProgramModuleByteArrowListWidget");
+    m_byteArrowListWidget->setAccessibleName("ProgramModuleByteArrowListWidget");
+    m_shiftArrowListWidget->setObjectName("ProgramModuleShiftArrowListWidget");
+    m_shiftArrowListWidget->setAccessibleName("ProgramModuleShiftArrowListWidget");
+    qCDebug(appLog) << "ProgramModule constructor called";
     m_memoryPublic = MemoryPublic::instance();
     m_memorylistwidget = m_memoryPublic->getwidget(MemoryPublic::programmerleft);
     m_proExpressionBar->setFixedHeight(EXPRESSIONBAR_HEIGHT);
@@ -109,10 +116,10 @@ ProgramModule::ProgramModule(QWidget *parent)
             m_memoryPublic->widgetminus(row, m_proExpressionBar->getInputEdit()->getCurrentAns().second);
     });
     if (!m_memoryPublic->isEmpty()) {
-        qDebug() << "Memory is not empty, triggering available event";
+        qCDebug(appLog) << "Memory is not empty, triggering available event";
         mAvailableEvent();
     } else {
-        qDebug() << "Memory is empty, triggering unavailable event";
+        qCDebug(appLog) << "Memory is empty, triggering unavailable event";
         mUnAvailableEvent();
     }
     connect(m_memorylistwidget, &MemoryWidget::insidewidget, this, [ = ]() {
@@ -158,7 +165,7 @@ ProgramModule::ProgramModule(QWidget *parent)
 
 ProgramModule::~ProgramModule()
 {
-    qDebug() << "ProgramModule destructor called";
+    qCDebug(appLog) << "ProgramModule destructor called";
 }
 
 /**
@@ -188,7 +195,7 @@ void ProgramModule::mousePressEvent(QMouseEvent *event)
 
 void ProgramModule::handleKeypadButtonPress(int key)
 {
-    qDebug() << "handleKeypadButtonPress called with key:" << key;
+    qCDebug(appLog) << "handleKeypadButtonPress called with key:" << key;
     QString path;
     if (DGuiApplicationHelper::instance()->themeType() == 2)
         path = QString(":/assets/images/%1/").arg("dark");
@@ -260,10 +267,10 @@ void ProgramModule::handleKeypadButtonPress(int key)
     case ProCheckBtnKeypad::Key_MS:
         m_proExpressionBar->enterEqualEvent();
         if (m_proExpressionBar->getInputEdit()->getCurrentAns().first) {
-            qDebug() << "Generating memory data from current answer";
+            qCDebug(appLog) << "Generating memory data from current answer";
             m_memoryPublic->generateData(m_proExpressionBar->getInputEdit()->getCurrentAns().second);
         } else {
-            qWarning() << "Cannot generate memory data - invalid current answer";
+            qCWarning(appLog) << "Cannot generate memory data - invalid current answer";
         }
         break;
     case ProgrammerKeypad::Key_0:
@@ -427,7 +434,7 @@ void ProgramModule::handleKeypadButtonPress(int key)
 
 void ProgramModule::handleKeypadButtonPressByspace(int key)
 {
-    qDebug() << "handleKeypadButtonPressByspace called with key:" << key;
+    qCDebug(appLog) << "handleKeypadButtonPressByspace called with key:" << key;
     QString path;
     if (DGuiApplicationHelper::instance()->themeType() == 2)
         path = QString(":/assets/images/%1/").arg("dark");
@@ -497,10 +504,10 @@ void ProgramModule::handleKeypadButtonPressByspace(int key)
     case ProCheckBtnKeypad::Key_MS:
         m_proExpressionBar->enterEqualEvent();
         if (m_proExpressionBar->getInputEdit()->getCurrentAns().first) {
-            qDebug() << "Generating memory data from current answer (space press)";
+            qCDebug(appLog) << "Generating memory data from current answer (space press)";
             m_memoryPublic->generateData(m_proExpressionBar->getInputEdit()->getCurrentAns().second);
         } else {
-            qWarning() << "Cannot generate memory data - invalid current answer (space press)";
+            qCWarning(appLog) << "Cannot generate memory data - invalid current answer (space press)";
         }
         break;
     case ProgrammerKeypad::Key_0:
