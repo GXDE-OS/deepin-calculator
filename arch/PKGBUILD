@@ -1,6 +1,6 @@
 # Maintainer: CharOfString <root@charofstring.cc>
 pkgname=gxde-deepin-calculator
-pkgver=6.5.41
+pkgver=6.5.42
 pkgrel=1
 pkgdesc='Easy to use calculator for GXDE'
 arch=('x86_64' 'aarch64')
